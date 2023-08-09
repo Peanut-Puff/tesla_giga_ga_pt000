@@ -2,6 +2,7 @@ import cv2
 import time
 import os
 def get_img(file_name=''):
+    os.chdir('C:/Users/luuux/Desktop/tasks/w1')
     cap = cv2.VideoCapture(0)
     ret,frame=cap.read()
     # cv2.imshow('capture',frame)

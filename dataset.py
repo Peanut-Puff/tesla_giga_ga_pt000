@@ -39,11 +39,8 @@ def load_set(data_path: str, img_shape: Tuple[int, int]):
         train_images[i] = train_images[i].astype(np.float32) / 255.0
 
     for i in range(len(test_images)):
-        try:
-            test_images[i] = cv2.resize(test_images[i], img_shape)
-            test_images[i] = test_images[i].astype(np.float32) / 255.0
-        except:
-            print(test_images[i])
+        test_images[i] = cv2.resize(test_images[i], img_shape)
+        test_images[i] = test_images[i].astype(np.float32) / 255.0
     return np.array(train_images),np.array(test_images),train_car_cnt,train_non_car_cnt,test_car_cnt,test_non_car_cnt
 
 

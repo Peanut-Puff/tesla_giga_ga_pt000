@@ -1,3 +1,4 @@
+import os
 import tensorflow as tf
 
 from dataset import get_car_set
@@ -9,7 +10,7 @@ def init_model(input_shape=(224, 224, 3)):
         tf.keras.layers.BatchNormalization(3),
         tf.keras.layers.ReLU(),
         tf.keras.layers.MaxPool2D(),
-        tf.keras.layers.Conv2D(64, 3, 2),
+        tf.keras.layers.Conv2D(64, 3),
         tf.keras.layers.BatchNormalization(3),
         tf.keras.layers.ReLU(),
         tf.keras.layers.MaxPool2D(),
@@ -24,6 +25,7 @@ def init_model(input_shape=(224, 224, 3)):
 
 
 def train(model_name='model'):
+    os.chdir('C:/Users/luuux/Desktop/tasks/w1')
     train_X, train_Y, test_X, test_Y = get_car_set(
         'tesla_giga_ga_pt000/data/train')
     print(train_X.shape)  # (m, 224, 224, 3)
@@ -37,3 +39,6 @@ def train(model_name='model'):
     model.fit(train_X, train_Y, epochs=20, batch_size=16)
     model.evaluate(test_X, test_Y)
     model.save('tesla_giga_ga_pt000/model/'+model_name+'.h5')
+
+if __name__ == '__main__':
+    train()
