@@ -24,21 +24,26 @@ def init_model(input_shape=(224, 224, 3)):
     return model
 
 
-def train(model_name='model'):
+def train(model_name='model.h5'):
     os.chdir('C:/Users/luuux/Desktop/tasks/w1')
     train_X, train_Y, test_X, test_Y = get_car_set(
         'tesla_giga_ga_pt000/data/train')
     print(train_X.shape)  # (m, 224, 224, 3)
     print(train_Y.shape)  # (m, 1)
+    
+    if len(os.listdir('tesla_giga_ga_pt000/model')) > 0:
+        model = tf.keras.models.load_model(
+            'tesla_giga_ga_pt000/model/'+model_name, compile=False)
+    else:
+        model = init_model()
 
-    model = init_model()
     model.compile(optimizer='adam',
                   loss='binary_crossentropy',
                   metrics=['accuracy'])
-
     model.fit(train_X, train_Y, epochs=20, batch_size=16)
     model.evaluate(test_X, test_Y)
-    model.save('tesla_giga_ga_pt000/model/'+model_name+'.h5')
+    model.save('tesla_giga_ga_pt000/model/'+model_name)
+
 
 if __name__ == '__main__':
     train()

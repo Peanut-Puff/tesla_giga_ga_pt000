@@ -2,7 +2,7 @@ from camera_cv2 import get_img
 from predict import predict
 from train import train
 def main():
-    # train()
+    train()
     predict()
 
 
