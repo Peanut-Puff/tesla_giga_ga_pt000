@@ -1,4 +1,6 @@
 import cv2
+import os
+
 def get_image(file_name):
     return cv2.imread(file_name)
 

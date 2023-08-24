@@ -1,13 +1,14 @@
 from keras.models import load_model
 import cv2
 import numpy as np
+import config
 
 def predict(image,model_name="model.h5"):
     # Disable scientific notation for clarity
     np.set_printoptions(suppress=True)
 
     # Load the model
-    model = load_model('tesla_giga_ga_pt000/model/'+model_name, compile=False)
+    model = load_model(config.MODEL_DIR+model_name, compile=False)
 
     # resize & normalize
     img_shape = (224, 224)

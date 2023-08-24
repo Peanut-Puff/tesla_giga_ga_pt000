@@ -1,6 +1,6 @@
 import os
 import tensorflow as tf
-
+import config
 from dataset import get_car_set
 
 
@@ -25,15 +25,14 @@ def init_model(input_shape=(224, 224, 3)):
 
 
 def train(model_name='model.h5'):
-    os.chdir('C:/Users/luuux/Desktop/tasks/w1')
     train_X, train_Y, test_X, test_Y = get_car_set(
-        'tesla_giga_ga_pt000/data/train')
+        config.TRAIN_DIR)
     print(train_X.shape)  # (m, 224, 224, 3)
     print(train_Y.shape)  # (m, 1)
     
-    if len(os.listdir('tesla_giga_ga_pt000/model')) > 0:
+    if len(os.listdir(config.MODEL_DIR)) > 0:
         model = tf.keras.models.load_model(
-            'tesla_giga_ga_pt000/model/'+model_name, compile=False)
+            config.MODEL_DIR+model_name, compile=False)
     else:
         model = init_model()
 
@@ -42,7 +41,7 @@ def train(model_name='model.h5'):
                   metrics=['accuracy'])
     model.fit(train_X, train_Y, epochs=20, batch_size=16)
     model.evaluate(test_X, test_Y)
-    model.save('tesla_giga_ga_pt000/model/'+model_name)
+    model.save(config.MODEL_DIR+model_name)
 
 
 if __name__ == '__main__':

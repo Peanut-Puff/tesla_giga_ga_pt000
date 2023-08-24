@@ -1,36 +1,30 @@
-import datetime
 import pymysql
+import config
 
 class db_util:
-    def __init__(self, host='localhost', port=3306, user='root', psw='', db='tesla_giga_ga_pt000', charset='utf8'):
-        self.host = host
-        self.port = port
-        self.user = user
-        self.psw = psw
-        self.db = db
-        self.charset = charset
+    def __init__(self):
+        self.cfg=config.DATABASE_CONFIG
 
     def connect(self):
-        self.conn = pymysql.Connect(host=self.host, port=self.port, user=self.user, passwd=self.psw, db=self.db,
-                                    charset=self.charset)
+        self.conn = pymysql.Connect(**self.cfg)
         self.cur = self.conn.cursor()
 
     def close(self):
         self.cur.close()
         self.conn.close()
-
-    def select_by_predict_result_null(self):
+    
+    def select_by_predict_result_null(self,limit,max=0):
         self.connect()
-        sql = "select `id`,`path` from `image` where `predict_result` is null"
-        self.cur.execute(sql)
+        sql = "select `id`,`path` from `image` where `predict_result` is null and `id` > %s LIMIT %s"
+        self.cur.execute(sql,(max,limit))
         self.data = self.cur.fetchall()
         self.close()
         return self.data
     
-    def update_predict_result(self,id,update_value):
+    def update_key_valaue(self,id,update_key,update_value):
         self.connect()
-        sql="update `image` set `predict_result`=%s,`updateat`=%s where `id`=%s"
-        self.cur.execute(sql,(update_value,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),id))
+        sql="update `image` set `"+update_key+"`=%s,`updateat`=NOW() where `id`=%s"
+        self.cur.execute(sql,(update_value,id))
         self.conn.commit()
         self.close()
         return
@@ -40,9 +34,8 @@ class db_util:
 
     def insert(self,name,path):
         self.connect()
-        dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        sql="insert into `image`(`name`,`path`,`isactive`,`created`,`updateat`) values(%s,%s,1,%s,%s)"
-        self.cur.execute(sql,(name,path,dt,dt))
+        sql="insert into `image`(`name`,`path`) values(%s,%s)"
+        self.cur.execute(sql,(name,path))
         self.conn.commit()
         self.close()
         return
